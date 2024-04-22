@@ -1,0 +1,102 @@
+DATA:
+led 0
+sw 0
+dis 0
+btn 0
+sec 0
+msec 0
+usec 0
+lcd 0
+arr 0
+contador 4
+
+
+CODE:
+
+jmp loop_1
+comienzo:
+mov A,0
+mov (led),A
+mov (sw),A
+mov (dis),A
+mov (btn),A
+mov B, 4
+mov (contador),B
+mov B,0
+
+jmp loop_1
+
+
+loop_1:
+
+mov B,(btn)
+mov (dis),B
+mov A,(sw)
+CMP A, 1F40h
+JEQ cuenta_regresiva
+JMP loop_1
+
+cuenta_regresiva:
+    MOV A,(contador)
+    dec A
+    MOV (contador), A
+    mov B, A
+    MOV (dis),B
+    mov A,B
+    cmp A,0
+    jeq empezar_msec
+    MOV A, (sec)
+    cmp A, (sec)
+    jeq loop_2
+
+loop_2:
+    cmp A, (sec)
+    jlt cuenta_regresiva
+    jmp loop_2
+
+
+empezar_msec:
+mov A,0
+cmp A,(msec)
+jeq hola
+jmp empezar_msec
+
+hola:
+mov B,0
+MOV (dis), B
+
+xd:
+mov B,(btn)
+mov (led),B
+mov A,(btn)
+CMP A,0
+JNE guardar_msec
+JMP xd
+
+guardar_msec:
+mov B,A
+mov A,(msec)
+mov (10), A
+mov A,B
+
+loop_3:
+
+mov (11),A
+mov B,(10)
+
+
+lol:
+mov (dis),A
+mov A,B
+mov (led),A
+mov A,(sw)
+cmp A,0
+jeq verificador
+mov A,(11)
+jmp lol
+
+verificador:
+mov A,(sw)
+cmp A,(20h)
+jeq comienzo
+jmp verificador
